@@ -3,6 +3,7 @@ numpy>=1.24
 pandas>=2.0
 scikit-learn>=1.4
 xgboost>=2.0
+xgboost<3.1; python_version < "3.11"
 catboost>=1.2
 lightgbm>=4.0
 pyyaml>=6.0
