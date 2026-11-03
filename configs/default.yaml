@@ -1,0 +1,47 @@
+# Default experiment configuration for the abalone age regression pipeline.
+seed: 42
+
+data:
+  source: uci            # "uci" (download + cache) or "kaggle" (local train/test CSVs)
+  cache_dir: data/raw
+  urls:                  # tried in order; first one that downloads and verifies wins
+    - https://archive.ics.uci.edu/ml/machine-learning-databases/abalone/abalone.data
+    - https://raw.githubusercontent.com/jbrownlee/Datasets/master/abalone.csv
+  # Content fingerprint (sha256 of the canonicalised 4,177-row table, so it is
+  # independent of line endings and which mirror served the file). Computed
+  # with `abalone.data.frame_fingerprint` on the mirror copy above; set to null
+  # to skip verification.
+  expected_fingerprint: 55eb32990a698eedc1938628d7a148b8795aeb19b211b0bb0038a149c9cc3c1f
+  kaggle_train_path: data/kaggle/train.csv
+  kaggle_test_path: data/kaggle/test.csv
+  holdout_size: 0.2
+
+features:
+  clip_outliers: true
+  clip_quantiles: [0.001, 0.999]
+  add_ratios: true
+  add_volume: true
+  add_log_weights: true
+
+cv:
+  n_splits: 5
+  n_repeats: 2
+  n_jobs: -1
+
+models:
+  enabled: [baseline, linear, ridge, random_forest, xgboost, lightgbm, catboost, stacking, blend]
+  params:
+    ridge: {alpha: 1.0}
+    random_forest: {n_estimators: 300, min_samples_leaf: 4, max_features: 0.5}
+    xgboost: {n_estimators: 600, learning_rate: 0.03, max_depth: 4, subsample: 0.8, colsample_bytree: 0.8, min_child_weight: 5}
+    lightgbm: {n_estimators: 600, learning_rate: 0.03, num_leaves: 15, subsample: 0.8, subsample_freq: 1, colsample_bytree: 0.8, min_child_samples: 20}
+    catboost: {iterations: 800, learning_rate: 0.05, depth: 6}
+  ensemble_members: [ridge, random_forest, xgboost, lightgbm, catboost]
+
+tracking:
+  backend: json          # "json" or "mlflow" (requires `pip install mlflow`)
+  dir: runs
+
+artifacts:
+  dir: models
+  model_filename: model.joblib

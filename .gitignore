@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+
+# Tooling
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.ipynb_checkpoints/
+
+# Data, models and experiment outputs (reproducible via `abalone train`)
+data/
+models/
+runs/
+mlruns/
+reports/
+catboost_info/
+*.joblib
+*.pkl
+predictions.csv
+submission.csv
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
