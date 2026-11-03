@@ -1,6 +1,7 @@
 # Abalone Age Regression Pipeline
 
 [![CI](https://github.com/srini2k03/abalone-age-regression/actions/workflows/ci.yml/badge.svg)](https://github.com/srini2k03/abalone-age-regression/actions/workflows/ci.yml)
+[![Live demo](https://img.shields.io/badge/live%20demo-GitHub%20Pages-1d5fae)](https://srini2k03.github.io/abalone-age-regression/)
 ![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-pipelines-orange)
 ![XGBoost](https://img.shields.io/badge/XGBoost%20%7C%20CatBoost%20%7C%20LightGBM-gradient%20boosting-green)
@@ -11,6 +12,9 @@
 Predict the **age of an abalone** (number of shell rings; age ≈ rings + 1.5 years) from cheap
 morphometric measurements (length, diameter, height and four weights), instead of the slow
 lab procedure of cutting the shell, staining it and counting rings under a microscope.
+
+**[Live demo](https://srini2k03.github.io/abalone-age-regression/)**: try the tuned model in your
+browser. It runs fully client-side, with no backend.
 
 The project is a complete, reproducible ML pipeline: data download with integrity checks,
 schema validation, scikit-learn feature transformers, a model zoo trained directly for
@@ -37,6 +41,40 @@ SHAP explanations, experiment tracking, a CLI, a FastAPI service and a Docker im
   cache and a line-ending-independent *content fingerprint* of the 4,177-row table.
 - **Production surface** — `abalone train | evaluate | tune | predict | explain` CLI, joblib model
   bundles with metadata, FastAPI (single + batch endpoints), Dockerfile, CI.
+
+## Live demo
+
+**https://srini2k03.github.io/abalone-age-regression/**
+
+[![Web demo: interactive predictor](docs/screenshot-web.png)](https://srini2k03.github.io/abalone-age-regression/)
+
+A static single-page site (`web/`, plain HTML/CSS/JS, no build step) that makes real predictions
+in the browser:
+
+- **Model:** the tuned XGBoost pipeline from the *Tuning* result below (300 trees, depth 4),
+  fitted on the 3,341-row training split with the project's own features. Hold-out RMSLE
+  **0.1656** on the 836 unseen rows; 5×2 CV RMSLE 0.1681 ± 0.0038. The trees and the
+  `QuantileClipper` bounds are exported to `web/data/model.json` (~190 kB).
+- **Feature engineering in JS:** [`web/js/model.js`](web/js/model.js) ports clipping, the
+  morphometric features and the one-hot encoding line by line, then walks the trees with float32
+  thresholds and accumulation as XGBoost does.
+- **Parity check:** on 196 rows (random rows, every anomalous UCI row and out-of-range inputs) the
+  JS output matches Python with a max absolute difference of 6.7e-7 rings (the log-space margins
+  are identical). The Pages workflow re-runs this check before deploying.
+- **Page:** live predictor with sliders and presets taken from real hold-out rows, the CV
+  comparison chart and table above, real SHAP importances for the deployed model, and a pipeline
+  diagram. Light and dark themes, responsive down to phone width.
+
+```bash
+python scripts/export_web_model.py     # retrain + export web/data/*.json, then run the parity check
+node scripts/check_web_parity.mjs      # parity check only
+node scripts/web_smoke_test.cjs        # headless-Chromium test of the page (needs `playwright`)
+python -m http.server -d web 8000      # preview at http://localhost:8000
+```
+
+Deployment: [`.github/workflows/pages.yml`](.github/workflows/pages.yml) publishes `web/` to the
+`gh-pages` branch on every push to `main`. In *Settings → Pages*, the source must be set to
+*Deploy from a branch: `gh-pages` / root*.
 
 ## Pipeline
 
@@ -228,8 +266,11 @@ abalone-age-regression/
 │   ├── cli.py                    # `abalone` typer CLI
 │   └── api/                      # FastAPI app + pydantic schemas
 ├── tests/                        # pytest suite (synthetic data, no network)
+├── web/                          # static demo site (GitHub Pages): HTML/CSS/JS + exported model
+├── scripts/                      # export_web_model.py, JS parity check, browser smoke test
 ├── notebooks/01_eda.ipynb        # exploratory analysis (outputs cleared)
 ├── .github/workflows/ci.yml      # ruff + pytest matrix + real-data smoke run + docker build
+├── .github/workflows/pages.yml   # parity check + publish web/ to gh-pages
 ├── Dockerfile · Makefile · pyproject.toml · requirements*.txt
 └── LICENSE
 ```
