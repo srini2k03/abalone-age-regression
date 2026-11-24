@@ -66,6 +66,9 @@ async function setRow(page, row) {
       hasTouch: !!vp.mobile,
       deviceScaleFactor: vp.mobile ? 2 : 1,
     });
+    // The page is dark by default and keeps the visitor's choice under localStorage "theme" (shared with
+    // the portfolio); seed it so the light runs really test the light theme.
+    await ctx.addInitScript((t) => { try { localStorage.setItem("theme", t); } catch (e) { /* ignore */ } }, vp.scheme);
     const page = await ctx.newPage();
     const errors = [];
     page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") errors.push(`console.${m.type()}: ${m.text()}`); });
@@ -76,6 +79,7 @@ async function setRow(page, row) {
     await page.goto(base, { waitUntil: "networkidle" });
     await page.waitForSelector("body[data-ready=true]", { timeout: 10000 });
 
+    check((await page.getAttribute("html", "data-theme")) === vp.scheme, `[${vp.name}] ${vp.scheme} theme applied`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     check(overflow <= 0, `[${vp.name}] no horizontal overflow (scrollWidth - innerWidth = ${overflow})`);
 
@@ -131,10 +135,11 @@ async function setRow(page, row) {
       check((await page.getAttribute("#in-height", "aria-invalid")) === "true" && (await rings(page)) === keep,
         "empty field is flagged and does not change the prediction");
 
-      // theme toggle flips to dark
+      // theme toggle flips light -> dark and back
       await page.click("#theme-toggle");
       check((await page.getAttribute("html", "data-theme")) === "dark", "theme toggle switches to dark");
       await page.click("#theme-toggle");
+      check((await page.getAttribute("html", "data-theme")) === "light", "theme toggle switches back to light");
 
       check((await page.$$("#cmp-chart svg .row")).length === 10, "model comparison chart has 10 bars");
       check((await page.$$("#cv-table tbody tr")).length === 10, "CV table has 10 rows");

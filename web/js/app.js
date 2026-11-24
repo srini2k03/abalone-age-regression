@@ -22,19 +22,24 @@ async function loadJSON(path) {
   return res.json();
 }
 
-// ---------- theme ----------
-function initTheme() {
-  const root = document.documentElement;
-  $("#theme-toggle").addEventListener("click", () => {
-    const current = root.dataset.theme ||
-      (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
-    root.dataset.theme = next;
-    try { localStorage.setItem("abalone-theme", next); } catch (e) { /* ignore */ }
-  });
-}
+// The theme toggle (#theme-toggle[data-theme-toggle]) is handled by sb-kit.js, shared with the portfolio.
 
 // ---------- predictor ----------
+/** Fill the slider track up to the thumb (CSS reads --p). */
+function paintRange(range) {
+  const min = Number(range.min);
+  const max = Number(range.max);
+  const p = max > min ? (100 * (Number(range.value) - min)) / (max - min) : 0;
+  range.style.setProperty("--p", `${Math.min(100, Math.max(0, p))}%`);
+}
+
+/** Replay a short "value changed" animation (CSS .is-tick; reduced motion makes it instant). */
+function tick(el) {
+  el.classList.remove("is-tick");
+  void el.offsetWidth;
+  el.classList.add("is-tick");
+}
+
 function buildFields(state, onChange) {
   const host = $("#fields");
   for (const f of FIELDS) {
@@ -56,6 +61,7 @@ function buildFields(state, onChange) {
     const range = wrap.querySelector(`#${id}-range`);
     const num = wrap.querySelector(`#${id}`);
     range.addEventListener("input", () => {
+      paintRange(range);
       num.value = range.value;
       num.removeAttribute("aria-invalid");
       state.values[f.key] = Number(range.value);
@@ -69,6 +75,7 @@ function buildFields(state, onChange) {
       }
       num.removeAttribute("aria-invalid");
       range.value = String(Math.min(Math.max(v, f.slider[0]), f.slider[1]));
+      paintRange(range);
       state.values[f.key] = v;
       onChange(true);
     });
@@ -86,6 +93,7 @@ function setInputs(values) {
     $(`#in-${f.key}`).value = String(v);
     $(`#in-${f.key}`).removeAttribute("aria-invalid");
     $(`#in-${f.key}-range`).value = String(Math.min(Math.max(v, f.slider[0]), f.slider[1]));
+    paintRange($(`#in-${f.key}-range`));
   }
   const radio = document.querySelector(`input[name="sex"][value="${values.sex}"]`);
   if (radio) radio.checked = true;
@@ -134,9 +142,18 @@ function initPredictor(model, insights) {
     const ms = performance.now() - t0;
 
     const ringsEl = $("#pred-rings");
-    ringsEl.textContent = fmt(out.rings, 1);
+    const shown = fmt(out.rings, 1);
+    const changed = ringsEl.textContent !== shown;
+    ringsEl.textContent = shown;
     ringsEl.dataset.rings = String(out.rings);
     $("#pred-age").textContent = fmt(out.age, 1);
+    $("#mini-rings").textContent = shown;
+    $("#mini-age").textContent = fmt(out.age, 1);
+    if (changed) {
+      tick(ringsEl);
+      tick($("#pred-age"));
+      tick($("#mini-rings"));
+    }
 
     const p = state.preset !== null ? presets[state.preset] : null;
     const actual = $("#pred-actual");
@@ -276,7 +293,6 @@ function initStats(insights, results) {
 }
 
 async function main() {
-  initTheme();
   document.addEventListener("scroll", hideTip, { passive: true });
   const [spec, insights, results] = await Promise.all([
     loadJSON("data/model.json"),
