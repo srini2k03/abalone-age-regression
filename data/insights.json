@@ -1,0 +1,269 @@
+{
+ "model": {
+  "name": "XGBoost (tuned)",
+  "params": {
+   "n_estimators": 300,
+   "learning_rate": 0.023993242906812727,
+   "max_depth": 4,
+   "subsample": 0.728034992108518,
+   "colsample_bytree": 0.8711055768358081,
+   "min_child_weight": 1.8187859051288213,
+   "reg_lambda": 0.11400863701127326
+  },
+  "n_trees": 300,
+  "n_features": 21,
+  "trained_on_rows": 3341,
+  "model_json_bytes": 195820
+ },
+ "data": {
+  "n_rows": 4177,
+  "fingerprint": "55eb32990a698eedc1938628d7a148b8795aeb19b211b0bb0038a149c9cc3c1f",
+  "n_train": 3341,
+  "n_holdout": 836
+ },
+ "holdout": {
+  "rmsle": 0.165557,
+  "rmse": 2.083099,
+  "mae": 1.470521,
+  "r2": 0.581911,
+  "baseline_rmsle": 0.283932,
+  "n_rows": 836
+ },
+ "cv": {
+  "rmsle_mean": 0.168102,
+  "rmsle_std": 0.003817,
+  "rmse_mean": 2.089434,
+  "mae_mean": 1.448086,
+  "r2_mean": 0.578614,
+  "scheme": "RepeatedKFold(5x2, seed=42)"
+ },
+ "shap": {
+  "sample_rows": 1000,
+  "space": "log1p(rings)",
+  "values": [
+   {
+    "feature": "shell_weight",
+    "mean_abs_shap": 0.074795
+   },
+   {
+    "feature": "shucked_ratio",
+    "mean_abs_shap": 0.068747
+   },
+   {
+    "feature": "volume",
+    "mean_abs_shap": 0.021455
+   },
+   {
+    "feature": "height",
+    "mean_abs_shap": 0.017977
+   },
+   {
+    "feature": "log_shell_weight",
+    "mean_abs_shap": 0.015452
+   },
+   {
+    "feature": "meat_to_shell",
+    "mean_abs_shap": 0.01476
+   },
+   {
+    "feature": "viscera_weight",
+    "mean_abs_shap": 0.014069
+   },
+   {
+    "feature": "viscera_ratio",
+    "mean_abs_shap": 0.013143
+   },
+   {
+    "feature": "sex_I",
+    "mean_abs_shap": 0.012546
+   },
+   {
+    "feature": "diameter",
+    "mean_abs_shap": 0.012358
+   },
+   {
+    "feature": "aspect_ratio",
+    "mean_abs_shap": 0.009322
+   },
+   {
+    "feature": "density",
+    "mean_abs_shap": 0.007862
+   },
+   {
+    "feature": "whole_weight",
+    "mean_abs_shap": 0.007128
+   },
+   {
+    "feature": "shell_ratio",
+    "mean_abs_shap": 0.005172
+   },
+   {
+    "feature": "shucked_weight",
+    "mean_abs_shap": 0.003147
+   },
+   {
+    "feature": "length",
+    "mean_abs_shap": 0.002655
+   },
+   {
+    "feature": "log_viscera_weight",
+    "mean_abs_shap": 0.00255
+   },
+   {
+    "feature": "sex_M",
+    "mean_abs_shap": 0.000748
+   },
+   {
+    "feature": "log_shucked_weight",
+    "mean_abs_shap": 0.000691
+   },
+   {
+    "feature": "sex_F",
+    "mean_abs_shap": 0.000603
+   },
+   {
+    "feature": "log_whole_weight",
+    "mean_abs_shap": 0.000554
+   }
+  ]
+ },
+ "ranges": {
+  "length": {
+   "min": 0.075,
+   "max": 0.815,
+   "median": 0.545
+  },
+  "diameter": {
+   "min": 0.055,
+   "max": 0.65,
+   "median": 0.425
+  },
+  "height": {
+   "min": 0.0,
+   "max": 1.13,
+   "median": 0.14
+  },
+  "whole_weight": {
+   "min": 0.002,
+   "max": 2.8255,
+   "median": 0.7995
+  },
+  "shucked_weight": {
+   "min": 0.001,
+   "max": 1.488,
+   "median": 0.336
+  },
+  "viscera_weight": {
+   "min": 0.0005,
+   "max": 0.76,
+   "median": 0.171
+  },
+  "shell_weight": {
+   "min": 0.0015,
+   "max": 1.005,
+   "median": 0.234
+  }
+ },
+ "ring_histogram": {
+  "1": 1,
+  "2": 1,
+  "3": 15,
+  "4": 57,
+  "5": 115,
+  "6": 259,
+  "7": 391,
+  "8": 568,
+  "9": 689,
+  "10": 634,
+  "11": 487,
+  "12": 267,
+  "13": 203,
+  "14": 126,
+  "15": 103,
+  "16": 67,
+  "17": 58,
+  "18": 42,
+  "19": 32,
+  "20": 26,
+  "21": 14,
+  "22": 6,
+  "23": 9,
+  "24": 2,
+  "25": 1,
+  "26": 1,
+  "27": 2,
+  "29": 1
+ },
+ "presets": [
+  {
+   "label": "Juvenile (infant)",
+   "uci_row": 930,
+   "sex": "I",
+   "length": 0.44,
+   "diameter": 0.345,
+   "height": 0.13,
+   "whole_weight": 0.4495,
+   "shucked_weight": 0.209,
+   "viscera_weight": 0.0835,
+   "shell_weight": 0.134,
+   "rings": 6,
+   "python_pred_rings": 8.048554
+  },
+  {
+   "label": "Young male",
+   "uci_row": 3292,
+   "sex": "M",
+   "length": 0.53,
+   "diameter": 0.405,
+   "height": 0.13,
+   "whole_weight": 0.738,
+   "shucked_weight": 0.2845,
+   "viscera_weight": 0.17,
+   "shell_weight": 0.193,
+   "rings": 9,
+   "python_pred_rings": 11.796165
+  },
+  {
+   "label": "Adult female",
+   "uci_row": 1919,
+   "sex": "F",
+   "length": 0.6,
+   "diameter": 0.465,
+   "height": 0.16,
+   "whole_weight": 1.133,
+   "shucked_weight": 0.466,
+   "viscera_weight": 0.2885,
+   "shell_weight": 0.298,
+   "rings": 11,
+   "python_pred_rings": 10.668971
+  },
+  {
+   "label": "Mature male",
+   "uci_row": 193,
+   "sex": "M",
+   "length": 0.58,
+   "diameter": 0.45,
+   "height": 0.15,
+   "whole_weight": 0.927,
+   "shucked_weight": 0.276,
+   "viscera_weight": 0.1815,
+   "shell_weight": 0.36,
+   "rings": 14,
+   "python_pred_rings": 14.772003
+  },
+  {
+   "label": "Old female",
+   "uci_row": 498,
+   "sex": "F",
+   "length": 0.605,
+   "diameter": 0.485,
+   "height": 0.165,
+   "whole_weight": 1.0105,
+   "shucked_weight": 0.435,
+   "viscera_weight": 0.209,
+   "shell_weight": 0.3,
+   "rings": 19,
+   "python_pred_rings": 10.754232
+  }
+ ]
+}

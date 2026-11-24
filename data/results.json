@@ -1,0 +1,16 @@
+{
+  "source": "README.md, section Results: abalone train on UCI Abalone, RepeatedKFold(5x2, seed=42) on 3,341 training rows",
+  "cv": [
+    {"model": "Blend", "detail": "mean of Ridge, RF, XGB, LGBM, CatBoost", "rmsle": 0.1678, "std": 0.0040, "rmse": 2.082, "mae": 1.449, "r2": 0.582, "vs_baseline": -41.5},
+    {"model": "Stacking", "detail": "non-negative linear meta-learner", "rmsle": 0.1682, "std": 0.0037, "rmse": 2.079, "mae": 1.447, "r2": 0.583, "vs_baseline": -41.4},
+    {"model": "Random Forest", "detail": "", "rmsle": 0.1693, "std": 0.0045, "rmse": 2.101, "mae": 1.462, "r2": 0.574, "vs_baseline": -41.0},
+    {"model": "CatBoost", "detail": "", "rmsle": 0.1699, "std": 0.0041, "rmse": 2.106, "mae": 1.468, "r2": 0.572, "vs_baseline": -40.8},
+    {"model": "XGBoost", "detail": "default config", "rmsle": 0.1701, "std": 0.0038, "rmse": 2.113, "mae": 1.469, "r2": 0.569, "vs_baseline": -40.7},
+    {"model": "LightGBM", "detail": "", "rmsle": 0.1717, "std": 0.0042, "rmse": 2.129, "mae": 1.482, "r2": 0.562, "vs_baseline": -40.2},
+    {"model": "Linear Regression", "detail": "", "rmsle": 0.1729, "std": 0.0030, "rmse": 2.120, "mae": 1.486, "r2": 0.566, "vs_baseline": -39.7},
+    {"model": "Ridge", "detail": "alpha = 1", "rmsle": 0.1765, "std": 0.0060, "rmse": 2.139, "mae": 1.500, "r2": 0.559, "vs_baseline": -38.5},
+    {"model": "Baseline", "detail": "mean of log1p rings", "rmsle": 0.2869, "std": 0.0090, "rmse": 3.253, "mae": 2.364, "r2": -0.021, "vs_baseline": null}
+  ],
+  "tuned_xgboost": {"model": "XGBoost (tuned)", "detail": "10-trial Optuna search; the model running on this page", "rmsle": 0.1681, "std": 0.0038},
+  "holdout_blend": {"rmsle": 0.1659, "rmse": 2.09, "mae": 1.48, "r2": 0.579, "baseline_rmsle": 0.2839, "improvement_pct": 41.6}
+}
